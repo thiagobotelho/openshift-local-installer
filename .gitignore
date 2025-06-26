@@ -1,0 +1,40 @@
+# Ignorar pull secret (segurança)
+config/pull-secret.txt
+
+# Ignorar binários
+bin/
+*.tar.xz
+*.zip
+*.gz
+
+# Arquivos de log e temporários
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Arquivos de backup do editor
+*~
+.#*
+*.swo
+*.swn
+
+# Diretórios ocultos de IDEs/editors
+.vscode/
+.idea/
+
+# Arquivos de cache
+__pycache__/
+*.cache
+
+# Arquivos de execução
+crc-instance/
+crc-data/
+crc.log
+
+# Arquivos de SO
+.DS_Store
+Thumbs.db
+
+# Arquivos de teste
+test-results/
