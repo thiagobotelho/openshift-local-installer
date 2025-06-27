@@ -38,7 +38,7 @@ O script `install.sh` realiza:
 openshift-local-installer/
 ├── install.sh                  # Script automatizado de instalação
 ├── config/
-│   └── pull-secret.txt         # Pull secret da Red Hat (fornecido manualmente)
+│   └── pull-secret             # Pull secret da Red Hat (fornecido manualmente)
 ├── bin/
 │   └── crc                     # Binário CRC
 ├── .gitignore
@@ -58,7 +58,7 @@ openshift-local-installer/
 2. **Adicione o Pull Secret:**
    - Acesse: [https://console.redhat.com/openshift/install/local](https://console.redhat.com/openshift/install/local)
    - Clique em `Download pull secret`.
-   - Salve como: `./config/pull-secret.txt`
+   - Salve como: `./config/pull-secret`
 
 3. **Torne o script executável e execute:**
    ```bash
