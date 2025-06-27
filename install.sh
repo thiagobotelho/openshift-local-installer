@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # === Variáveis ===
-CRC_ARCHIVE="crc-linux-amd64.tar.xz"
+CRC_ARCHIVE="bin/crc/crc-linux-amd64.tar.xz"
 INSTALL_DIR="/usr/local/bin"
 PULL_SECRET_FILE="./config/pull-secret"
 
@@ -20,18 +20,30 @@ function check_prerequisites() {
 # === Instalação do CRC ===
 function install_crc() {
     echo "[INFO] Extraindo e instalando CRC..."
-    tar -xf "$CRC_ARCHIVE"
-    CRC_DIR=$(find . -maxdepth 1 -type d -name "crc-linux-*-amd64" | head -n1)
+    if [ ! -f "$CRC_ARCHIVE" ]; then
+        echo "[ERROR] Arquivo '$CRC_ARCHIVE' não encontrado. Verifique o caminho."
+        exit 1
+    fi
+
+    tar -xf "$CRC_ARCHIVE" -C ./bin
+    CRC_DIR=$(find ./bin -maxdepth 1 -type d -name "crc-linux-*-amd64" | head -n1)
+
+    if [ -z "$CRC_DIR" ]; then
+        echo "[ERROR] Diretório CRC não encontrado após extração."
+        exit 1
+    fi
+
     sudo cp "${CRC_DIR}/crc" "$INSTALL_DIR/"
-    chmod +x "$INSTALL_DIR/crc"
+    sudo chmod +x "$INSTALL_DIR/crc"
 }
 
 # === Setup do CRC ===
 function setup_crc() {
     echo "[INFO] Executando crc setup e configurações..."
+    crc config set consent-telemetry no
     crc setup
-    crc config set memory 16384
-    crc config set cpus 4
+    crc config set memory 6144
+    crc config set cpus 2
     crc config set pull-secret-file "$PULL_SECRET_FILE"
 }
 
