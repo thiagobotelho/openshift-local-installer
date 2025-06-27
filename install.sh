@@ -5,7 +5,7 @@ set -euo pipefail
 # === Variáveis ===
 CRC_ARCHIVE="crc-linux-amd64.tar.xz"
 INSTALL_DIR="/usr/local/bin"
-PULL_SECRET_FILE="./config/pull-secret.txt"
+PULL_SECRET_FILE="./config/pull-secret"
 
 # === Verificações iniciais ===
 function check_prerequisites() {
