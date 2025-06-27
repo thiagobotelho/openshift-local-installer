@@ -3,9 +3,7 @@
 set -euo pipefail
 
 # === Variáveis ===
-CRC_VERSION="2.39.1"  # Substituir pela versão atual desejada
 CRC_ARCHIVE="crc-linux-amd64.tar.xz"
-CRC_DIR="crc-linux-${CRC_VERSION}-amd64"
 INSTALL_DIR="/usr/local/bin"
 PULL_SECRET_FILE="./config/pull-secret.txt"
 
@@ -19,19 +17,12 @@ function check_prerequisites() {
     sudo usermod -aG libvirt "$USER"
 }
 
-# === Download do CRC ===
-function download_crc() {
-    if [ ! -f "$CRC_ARCHIVE" ]; then
-        echo "[INFO] Baixando CRC..."
-        curl -LO "https://developers.redhat.com/content-gateway/file/v2/download?file=${CRC_ARCHIVE}" -o "$CRC_ARCHIVE"
-    fi
-}
-
 # === Instalação do CRC ===
 function install_crc() {
     echo "[INFO] Extraindo e instalando CRC..."
     tar -xf "$CRC_ARCHIVE"
-    sudo mv "${CRC_DIR}/crc" "$INSTALL_DIR/"
+    CRC_DIR=$(find . -maxdepth 1 -type d -name "crc-linux-*-amd64" | head -n1)
+    sudo cp "${CRC_DIR}/crc" "$INSTALL_DIR/"
     chmod +x "$INSTALL_DIR/crc"
 }
 
@@ -52,7 +43,6 @@ function start_crc() {
 
 # === Execução sequencial ===
 check_prerequisites
-download_crc
 install_crc
 setup_crc
 start_crc
