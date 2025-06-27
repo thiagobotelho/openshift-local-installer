@@ -60,8 +60,9 @@ openshift-local-installer/
    - Clique em `Download pull secret`.
    - Salve como: `./config/pull-secret.txt`
 
-3. **Execute:**
+3. **Torne o script executável e execute:**
    ```bash
+   chmod +x install.sh
    ./install.sh
    ```
 
