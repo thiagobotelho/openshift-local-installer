@@ -44,6 +44,7 @@ function setup_crc() {
     crc setup
     crc config set memory 16384
     crc config set cpus 4
+    crc config set disk-size 200
     crc config set pull-secret-file "$PULL_SECRET_FILE"
 }
 
