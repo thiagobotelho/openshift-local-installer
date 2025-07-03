@@ -42,7 +42,7 @@ function setup_crc() {
     echo "[INFO] Executando crc setup e configurações..."
     crc config set consent-telemetry no
     crc setup
-    crc config set memory 6144
+    crc config set memory 16384
     crc config set cpus 2
     crc config set pull-secret-file "$PULL_SECRET_FILE"
 }
