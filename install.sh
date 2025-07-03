@@ -43,7 +43,7 @@ function setup_crc() {
     crc config set consent-telemetry no
     crc setup
     crc config set memory 16384
-    crc config set cpus 2
+    crc config set cpus 4
     crc config set pull-secret-file "$PULL_SECRET_FILE"
 }
 
