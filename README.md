@@ -74,7 +74,7 @@ Após instalação:
 
 ```bash
 eval $(crc oc-env)
-oc login -u kubeadmin -p $(crc console --credentials)
+oc login -u kubeadmin https://api.crc.testing:6443
 crc console
 ```
 
