@@ -58,7 +58,7 @@ openshift-local-installer/
 2. **Adicione o Pull Secret:**
    - Acesse: [https://console.redhat.com/openshift/install/local](https://console.redhat.com/openshift/install/local)
    - Clique em `Download pull secret`.
-   - Salve como: `./config/pull-secret`
+   - Salve como: `config/pull-secret`
 
 3. **Torne o script executável e execute:**
    ```bash
