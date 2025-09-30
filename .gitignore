@@ -2,7 +2,6 @@
 config/pull-secret
 
 # Ignorar binários
-bin/crc/
 *.tar.xz
 *.zip
 *.gz
