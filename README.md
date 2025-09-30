@@ -55,9 +55,11 @@ openshift-local-installer/
    cd openshift-local-installer
    ```
 
-2. **Adicione o Pull Secret:**
+2. **Adicione o Instalador e o Pull Secret:**
    - Acesse: [https://console.redhat.com/openshift/install/local](https://console.redhat.com/openshift/install/local)
-   - Clique em `Download pull secret`.
+   - Clique em `Download - OpenShift Local (crc)`
+   - Salve como: `bin/crc/crc-linux-amd64.tar.xz`
+   - Clique em `Download - pull secret`
    - Salve como: `config/pull-secret`
 
 3. **Torne o script executável e execute:**
