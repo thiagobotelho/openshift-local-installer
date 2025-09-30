@@ -1,8 +1,8 @@
 # Ignorar pull secret (segurança)
-config/pull-secret.txt
+config/pull-secret
 
 # Ignorar binários
-bin/
+bin/crc/
 *.tar.xz
 *.zip
 *.gz
