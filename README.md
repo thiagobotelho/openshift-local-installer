@@ -51,7 +51,7 @@ openshift-local-installer/
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seu-usuario/openshift-local-installer.git
+   git clone https://github.com/thiagobotelho/openshift-local-installer.git
    cd openshift-local-installer
    ```
 
