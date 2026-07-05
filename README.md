@@ -38,7 +38,7 @@ O script `install.sh` realiza:
 openshift-local-installer/
 ├── install.sh                  # Script automatizado de instalação
 ├── config/
-│   └── pull-secret             # Pull secret da Red Hat (fornecido manualmente)
+│   └── pull-secret             # local e ignorado pelo Git
 ├── bin/
 │   └── crc                     # Binário CRC
 ├── .gitignore
@@ -67,6 +67,24 @@ openshift-local-installer/
    chmod +x install.sh
    ./install.sh
    ```
+
+Os recursos podem ser ajustados sem editar o script:
+
+```bash
+CRC_MEMORY=24576 CRC_CPUS=8 CRC_DISK_SIZE=200 ./install.sh
+```
+
+Bootstrap opcional do OpenShift GitOps:
+
+```bash
+CRC_MEMORY=32768 CRC_CPUS=8 ./install.sh --deploy-gitops
+```
+
+O App-of-Apps é mantido no repositório `argocd-gitops`. Em um CRC com pouca
+memória, sincronize as aplicações gradualmente.
+
+O pull secret nunca deve ser commitado. Se um segredo real for publicado,
+revogue-o no console da Red Hat e remova-o também do histórico Git.
 
 ---
 
