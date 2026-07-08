@@ -16,6 +16,29 @@ CRC_MIN_CPUS="${CRC_MIN_CPUS:-8}"
 CRC_MIN_MEMORY_MIB="${CRC_MIN_MEMORY_MIB:-24576}"
 EXPECTED_NAMESPACES="${EXPECTED_NAMESPACES:-openshift-gitops openshift-monitoring openshift-user-workload-monitoring keycloak-dev grafana zabbix observability tempo openshift-logging}"
 
+if ! command -v "${CRC_BIN}" >/dev/null 2>&1; then
+  bundled_crc="$(find "${ROOT_DIR}/bin" -maxdepth 2 -type f -name crc -perm -111 2>/dev/null | head -n 1)"
+  if [[ -n "${bundled_crc}" ]]; then
+    CRC_BIN="${bundled_crc}"
+  fi
+fi
+
+if ! command -v "${OC_BIN}" >/dev/null 2>&1; then
+  for candidate in "${HOME:-}/.local/bin/oc" "${ROOT_DIR}/bin/oc"; do
+    if [[ -x "${candidate}" ]]; then
+      OC_BIN="${candidate}"
+      break
+    fi
+  done
+fi
+
+if ! command -v "${OC_BIN}" >/dev/null 2>&1 && [[ -d "${HOME:-}/.crc/cache" ]]; then
+  bundled_oc="$(find "${HOME}/.crc/cache" -maxdepth 2 -type f -name oc -perm -111 2>/dev/null | sort | tail -n 1)"
+  if [[ -n "${bundled_oc}" ]]; then
+    OC_BIN="${bundled_oc}"
+  fi
+fi
+
 require() {
   command -v "$1" >/dev/null 2>&1 || {
     echo "[ERROR] Comando obrigatório não encontrado: $1" >&2

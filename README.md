@@ -124,6 +124,10 @@ cp .env.example .env
 scripts/validate-crc.sh
 ```
 
+Se `crc` ou `oc` não estiverem no `PATH`, o script tenta usar automaticamente
+binários conhecidos, como `bin/crc-linux-*/crc`, `~/.local/bin/oc` ou o cache
+do CRC. Você também pode fixar `CRC_BIN` e `OC_BIN` no `.env`.
+
 O script verifica status do CRC, login do `oc`, recursos mínimos recomendados,
 `enable-cluster-monitoring`, ClusterOperators, namespaces esperados, pods de
 monitoramento, rotas principais e Applications do Argo CD/OpenShift GitOps.
