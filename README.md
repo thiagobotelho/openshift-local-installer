@@ -83,6 +83,19 @@ CRC_MEMORY=32768 CRC_CPUS=8 ./install.sh --deploy-gitops
 O App-of-Apps é mantido no repositório `argocd-gitops`. Em um CRC com pouca
 memória, sincronize as aplicações gradualmente.
 
+Para a stack completa de observabilidade local, habilite o monitoramento do
+OpenShift antes de iniciar/reiniciar o CRC:
+
+```bash
+crc config set enable-cluster-monitoring true
+crc config set memory 32768
+crc config set cpus 8
+crc stop
+crc start
+```
+
+Mudanças de CPU/memória/monitoramento só entram em vigor após novo `crc start`.
+
 O pull secret nunca deve ser commitado. Se um segredo real for publicado,
 revogue-o no console da Red Hat e remova-o também do histórico Git.
 
@@ -97,6 +110,23 @@ eval $(crc oc-env)
 oc login -u kubeadmin https://api.crc.testing:6443
 crc console
 ```
+
+---
+
+## ✅ Validação do laboratório
+
+Este repositório valida somente o CRC/OpenShift Local e recursos de cluster. As
+configurações de Keycloak, Grafana, Zabbix, Loki, Tempo e OpenTelemetry ficam
+nos respectivos repositórios GitOps em `/home/thiagobotelho`.
+
+```bash
+cp .env.example .env
+scripts/validate-crc.sh
+```
+
+O script verifica status do CRC, login do `oc`, recursos mínimos recomendados,
+`enable-cluster-monitoring`, ClusterOperators, namespaces esperados, pods de
+monitoramento, rotas principais e Applications do Argo CD/OpenShift GitOps.
 
 ---
 
@@ -124,5 +154,6 @@ crc delete
 
 ## 📘 Referências
 
-- [Documentação oficial do OpenShift Local](https://www.redhat.com/en/blog/install-openshift-local)
+- [Documentação oficial do OpenShift Local](https://docs.redhat.com/en/documentation/red_hat_openshift_local)
+- [OpenShift Monitoring/User Workload Monitoring](https://docs.redhat.com/en/documentation/openshift_container_platform/4.14/html/monitoring/configuring-user-workload-monitoring)
 - [OpenShift Local no Red Hat Console](https://console.redhat.com/openshift/create/local)
