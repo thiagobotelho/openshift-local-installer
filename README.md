@@ -117,7 +117,7 @@ crc console
 
 Este repositório valida somente o CRC/OpenShift Local e recursos de cluster. As
 configurações de Keycloak, Grafana, Zabbix, Loki, Tempo e OpenTelemetry ficam
-nos respectivos repositórios GitOps em `/home/thiagobotelho`.
+nos respectivos repositórios GitOps.
 
 ```bash
 cp .env.example .env
