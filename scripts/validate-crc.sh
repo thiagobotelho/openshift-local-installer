@@ -14,7 +14,8 @@ CRC_BIN="${CRC_BIN:-crc}"
 OC_BIN="${OC_BIN:-oc}"
 CRC_MIN_CPUS="${CRC_MIN_CPUS:-8}"
 CRC_MIN_MEMORY_MIB="${CRC_MIN_MEMORY_MIB:-24576}"
-EXPECTED_NAMESPACES="${EXPECTED_NAMESPACES:-openshift-gitops openshift-monitoring openshift-user-workload-monitoring keycloak-dev grafana zabbix observability tempo openshift-logging}"
+EXPECTED_NAMESPACES="${EXPECTED_NAMESPACES:-openshift-gitops openshift-monitoring keycloak-dev grafana zabbix observability tempo openshift-logging observability-apps pyroscope}"
+EXPECT_USER_WORKLOAD_MONITORING="${EXPECT_USER_WORKLOAD_MONITORING:-false}"
 
 if ! command -v "${CRC_BIN}" >/dev/null 2>&1; then
   bundled_crc="$(find "${ROOT_DIR}/bin" -maxdepth 2 -type f -name crc -perm -111 2>/dev/null | head -n 1)"
@@ -90,8 +91,17 @@ done
 
 echo "[INFO] Validando OpenShift Monitoring..."
 "${OC_BIN}" -n openshift-monitoring get pods
-"${OC_BIN}" -n openshift-user-workload-monitoring get pods
 "${OC_BIN}" -n openshift-monitoring get configmap cluster-monitoring-config -o yaml 2>/dev/null || warn "cluster-monitoring-config ausente"
+
+if [[ "${EXPECT_USER_WORKLOAD_MONITORING}" == "true" ]]; then
+  "${OC_BIN}" -n openshift-user-workload-monitoring get pods
+else
+  if "${OC_BIN}" get ns openshift-user-workload-monitoring >/dev/null 2>&1; then
+    warn "openshift-user-workload-monitoring existe, mas a stack atual usa prometheus-gitops para workloads. Considere desativar UWM se quiser economizar recursos."
+  else
+    ok "User Workload Monitoring nativo não habilitado; workloads serão coletados pelo prometheus-gitops."
+  fi
+fi
 
 echo "[INFO] Validando rotas principais..."
 "${OC_BIN}" get route -A | grep -E 'openshift-gitops|keycloak|grafana|zabbix' || warn "rotas principais não encontradas"
