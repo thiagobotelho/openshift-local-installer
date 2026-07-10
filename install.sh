@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # === Variáveis ===
 CRC_ARCHIVE="bin/crc/crc-linux-amd64.tar.xz"
 INSTALL_DIR="/usr/local/bin"
@@ -9,6 +11,7 @@ PULL_SECRET_FILE="./config/pull-secret"
 CRC_MEMORY="${CRC_MEMORY:-16384}"
 CRC_CPUS="${CRC_CPUS:-4}"
 CRC_DISK_SIZE="${CRC_DISK_SIZE:-200}"
+ENABLE_USER_WORKLOAD_MONITORING="${ENABLE_USER_WORKLOAD_MONITORING:-true}"
 DEPLOY_GITOPS=false
 
 usage() {
@@ -66,17 +69,26 @@ function install_crc() {
 function setup_crc() {
     echo "[INFO] Executando crc setup e configurações..."
     crc config set consent-telemetry no
-    crc setup
     crc config set memory "$CRC_MEMORY"
     crc config set cpus "$CRC_CPUS"
     crc config set disk-size "$CRC_DISK_SIZE"
+    crc config set enable-cluster-monitoring true
     crc config set pull-secret-file "$PULL_SECRET_FILE"
+    crc setup
 }
 
 # === Start do cluster ===
 function start_crc() {
     echo "[INFO] Iniciando o cluster OpenShift Local..."
     crc start
+}
+
+function enable_user_workload_monitoring() {
+    [[ "$ENABLE_USER_WORKLOAD_MONITORING" == "true" ]] || return 0
+
+    echo "[INFO] Habilitando User Workload Monitoring..."
+    eval "$(crc oc-env)"
+    "${ROOT_DIR}/scripts/enable-user-workload-monitoring.sh"
 }
 
 function deploy_gitops() {
@@ -99,6 +111,7 @@ check_prerequisites
 install_crc
 setup_crc
 start_crc
+enable_user_workload_monitoring
 deploy_gitops
 
 echo "[SUCCESS] Instalação concluída. Execute 'crc console' para abrir a UI."

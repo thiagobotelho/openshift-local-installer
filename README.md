@@ -15,6 +15,7 @@ O script `install.sh` realiza:
 - Instalação do binário CRC
 - Aplicação do pull secret
 - Inicialização do cluster
+- Habilitação do monitoramento do cluster e, por padrão, do User Workload Monitoring
 
 ---
 
@@ -84,7 +85,8 @@ O App-of-Apps é mantido no repositório `argocd-gitops`. Em um CRC com pouca
 memória, sincronize as aplicações gradualmente.
 
 Para a stack completa de observabilidade local, habilite o monitoramento do
-OpenShift antes de iniciar/reiniciar o CRC:
+OpenShift antes de iniciar/reiniciar o CRC. O `install.sh` já aplica essa
+configuração, mas o comando manual é:
 
 ```bash
 crc config set enable-cluster-monitoring true
@@ -95,6 +97,18 @@ crc start
 ```
 
 Mudanças de CPU/memória/monitoramento só entram em vigor após novo `crc start`.
+
+Após o cluster estar ativo e com `oc login`, o User Workload Monitoring pode ser
+habilitado/reconciliado de forma idempotente:
+
+```bash
+scripts/enable-user-workload-monitoring.sh
+oc -n openshift-monitoring get configmap cluster-monitoring-config -o yaml
+oc -n openshift-user-workload-monitoring get pods
+```
+
+O script preserva outras chaves do ConfigMap `cluster-monitoring-config` e
+garante `enableUserWorkload: true` em `data.config.yaml`.
 
 O pull secret nunca deve ser commitado. Se um segredo real for publicado,
 revogue-o no console da Red Hat e remova-o também do histórico Git.
