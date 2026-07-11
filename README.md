@@ -21,13 +21,13 @@ O script `install.sh` realiza:
 
 ## 📦 Requisitos
 
-| Recurso        | Mínimo recomendado       |
-|----------------|--------------------------|
-| CPU            | 4 vCPUs                  |
-| RAM            | 16 GB                    |
-| Disco          | 40 GB SSD (livres)       |
-| SO             | Fedora, RHEL, CentOS     |
-| Virtualização  | `libvirt` com `kvm`      |
+| Recurso | Mínimo para CRC | Recomendado para a stack completa |
+|---|---:|---:|
+| CPU | 4 vCPUs | 10 vCPUs |
+| RAM | 16 GiB | 40 GiB para o CRC |
+| Disco | 40 GiB livres | 200 GiB para o disco do CRC |
+| SO | Fedora, RHEL, CentOS | Fedora, RHEL, CentOS |
+| Virtualização | `libvirt` com `kvm` | `libvirt` com `kvm` |
 
 > ❗ O uso de **VirtualBox não é suportado**. Apenas libvirt + KVM.
 
@@ -41,7 +41,9 @@ openshift-local-installer/
 ├── config/
 │   └── pull-secret             # local e ignorado pelo Git
 ├── bin/
-│   └── crc                     # Binário CRC
+│   └── crc/
+│       └── README.md           # instruções para baixar o pacote CRC
+├── .env.example                # variáveis do instalador/validador
 ├── .gitignore
 └── README.md
 ```
@@ -63,26 +65,32 @@ openshift-local-installer/
    - Clique em `Download - pull secret`
    - Salve como: `config/pull-secret`
 
-3. **Torne o script executável e execute:**
+3. **Revise as variáveis e execute:**
    ```bash
+   cp -n .env.example .env
    chmod +x install.sh
    ./install.sh
    ```
 
-Os recursos podem ser ajustados sem editar o script:
+O `install.sh` lê `.env` automaticamente. Também é possível sobrescrever
+variáveis na chamada:
 
 ```bash
-CRC_MEMORY=24576 CRC_CPUS=8 CRC_DISK_SIZE=200 ./install.sh
+CRC_MEMORY=32768 CRC_CPUS=8 CRC_DISK_SIZE=200 ./install.sh
 ```
 
 Bootstrap opcional do OpenShift GitOps:
 
 ```bash
-CRC_MEMORY=32768 CRC_CPUS=8 ./install.sh --deploy-gitops
+CRC_MEMORY=40960 CRC_CPUS=10 ./install.sh --deploy-gitops
 ```
 
-O App-of-Apps é mantido no repositório `argocd-gitops`. Em um CRC com pouca
-memória, sincronize as aplicações gradualmente.
+O bootstrap do OpenShift GitOps é aplicado em fases: primeiro `Namespace`,
+`OperatorGroup` e `Subscription`, depois aguarda a CRD `argocds.argoproj.io` e
+só então cria a instância `ArgoCD`. Isso evita o erro de primeira instalação
+`no matches for kind "ArgoCD"`. O App-of-Apps é mantido no repositório
+`argocd-gitops`. Em um CRC com pouca memória, sincronize as aplicações
+gradualmente.
 
 Para a stack completa de observabilidade local, habilite o monitoramento de
 plataforma do OpenShift antes de iniciar/reiniciar o CRC. O `install.sh` já
@@ -90,8 +98,8 @@ aplica essa configuração, mas o comando manual é:
 
 ```bash
 crc config set enable-cluster-monitoring true
-crc config set memory 32768
-crc config set cpus 8
+crc config set memory 40960
+crc config set cpus 10
 crc stop
 crc start
 ```
@@ -164,11 +172,16 @@ GitOps. O UWM nativo só é exigido se `EXPECT_USER_WORKLOAD_MONITORING=true`.
 ## 📋 Observações
 
 - O cluster é provisionado como **Single Node OpenShift (SNO)**.
-- A instalação padrão aloca 16 GB de RAM e 4 CPUs. Você pode alterar com:
+- A instalação padrão deste repositório usa 40 GiB de RAM e 10 CPUs para reduzir
+  pressão de memória na stack completa. Para laboratórios menores, reduza antes
+  de iniciar o CRC:
   ```bash
-  crc config set memory 12288
-  crc config set cpus 6
+  crc config set memory 32768
+  crc config set cpus 8
   ```
+- Se `crc` estiver ausente ou apontando para um symlink quebrado, baixe o pacote
+  oficial do OpenShift Local, salve em `bin/crc/crc-linux-amd64.tar.xz` e
+  reexecute `./install.sh`.
 
 ---
 

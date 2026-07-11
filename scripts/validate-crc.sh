@@ -12,8 +12,8 @@ fi
 
 CRC_BIN="${CRC_BIN:-crc}"
 OC_BIN="${OC_BIN:-oc}"
-CRC_MIN_CPUS="${CRC_MIN_CPUS:-8}"
-CRC_MIN_MEMORY_MIB="${CRC_MIN_MEMORY_MIB:-24576}"
+CRC_MIN_CPUS="${CRC_MIN_CPUS:-10}"
+CRC_MIN_MEMORY_MIB="${CRC_MIN_MEMORY_MIB:-40960}"
 EXPECTED_NAMESPACES="${EXPECTED_NAMESPACES:-openshift-gitops openshift-monitoring keycloak-dev grafana zabbix observability tempo openshift-logging observability-apps pyroscope}"
 EXPECT_USER_WORKLOAD_MONITORING="${EXPECT_USER_WORKLOAD_MONITORING:-false}"
 
