@@ -67,6 +67,11 @@ wait_for_resource() {
     done
 }
 
+subscription_has_installed_csv() {
+    csv="$(oc -n openshift-gitops-operator get subscription openshift-gitops-operator -o jsonpath='{.status.installedCSV}')" || return 1
+    [[ -n "${csv}" ]]
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --deploy-gitops) DEPLOY_GITOPS=true ;;
@@ -158,17 +163,12 @@ function deploy_gitops() {
     wait_for_resource "CRD argocds.argoproj.io" \
         oc get crd argocds.argoproj.io
 
-    wait_for_resource "Subscription openshift-gitops-operator com installedCSV" \
-        oc -n openshift-gitops-operator get subscription openshift-gitops-operator \
-        -o jsonpath='{.status.installedCSV}'
+    wait_for_resource "Subscription openshift-gitops-operator com installedCSV" subscription_has_installed_csv
 
-    csv="$(oc -n openshift-gitops-operator get subscription openshift-gitops-operator -o jsonpath='{.status.installedCSV}')"
-    if [[ -n "${csv}" ]]; then
-        oc -n openshift-gitops-operator wait \
-            --for=jsonpath='{.status.phase}'=Succeeded \
-            "csv/${csv}" \
-            --timeout="${TIMEOUT_SECONDS:-600}s"
-    fi
+    oc -n openshift-gitops-operator wait \
+        --for=jsonpath='{.status.phase}'=Succeeded \
+        "csv/${csv}" \
+        --timeout="${TIMEOUT_SECONDS:-600}s"
 
     oc apply -f "${raw_base}/argocd.yaml"
     oc apply -f "${raw_base}/clusterrolebinding.yaml"
