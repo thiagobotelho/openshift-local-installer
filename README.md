@@ -201,3 +201,9 @@ crc delete
 - [Documentação oficial do OpenShift Local](https://docs.redhat.com/en/documentation/red_hat_openshift_local)
 - [OpenShift Monitoring/User Workload Monitoring](https://docs.redhat.com/en/documentation/openshift_container_platform/4.14/html/monitoring/configuring-user-workload-monitoring)
 - [OpenShift Local no Red Hat Console](https://console.redhat.com/openshift/create/local)
+
+## Laboratório opcional de Service Mesh
+
+Após estabilizar a stack, os projetos [service-mesh-gitops](https://github.com/thiagobotelho/service-mesh-gitops) e [mesh-apps-lab](https://github.com/thiagobotelho/mesh-apps-lab) permitem estudar NetworkPolicy, Sidecar, mTLS e autorização L7 com os samples oficiais httpbin/sleep.
+
+Refaça medições de CPU/memória antes de instalar. O módulo é opt-in e não altera este instalador, a autenticação ou a observabilidade existente. Instalar Operator/CNI requer autorização e confirmação de contexto; não executar automaticamente como pós-instalação. Readiness e validação funcional seguem os guias dos projetos.
