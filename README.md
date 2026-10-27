@@ -207,3 +207,7 @@ crc delete
 Após estabilizar a stack, os projetos [service-mesh-gitops](https://github.com/thiagobotelho/service-mesh-gitops) e [mesh-apps-lab](https://github.com/thiagobotelho/mesh-apps-lab) permitem estudar NetworkPolicy, Sidecar, mTLS e autorização L7 com os samples oficiais httpbin/sleep.
 
 Refaça medições de CPU/memória antes de instalar. O módulo é opt-in e não altera este instalador, a autenticação ou a observabilidade existente. Instalar Operator/CNI requer autorização e confirmação de contexto; não executar automaticamente como pós-instalação. Readiness e validação funcional seguem os guias dos projetos.
+
+## Aprender a configuração
+
+Consulte o [guia comentado](docs/APRENDIZADO.md) para entender componentes, escolhas, testes positivos/negativos e reversão.
